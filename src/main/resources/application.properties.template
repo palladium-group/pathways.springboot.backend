@@ -1,0 +1,15 @@
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=create-drop
+# Database configurations
+spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/mydatabase
+spring.datasource.username=mydbuser
+spring.datasource.password=mydbpassword
+
+# Allowed origins
+allowed.origins=http://localhost:3000
+
+# Default User Configuration
+DEFAULT_USER_USERNAME=admin
+DEFAULT_USER_EMAIL=email
+DEFAULT_USER_PASSWORD=adminpassword
