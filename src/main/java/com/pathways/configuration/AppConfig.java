@@ -57,9 +57,9 @@ public class AppConfig {
             permissionRepository.save(new Permission("map-tnc", "/map-tnc"));
             permissionRepository.save(new Permission("map-tnc", "/map-tnc/finance"));
             permissionRepository.save(new Permission("map-tnc", "/map-tnc/monitoring-evaluation"));
-            permissionRepository.save(new Permission("map-tnc", "/map-tnc"));
-            permissionRepository.save(new Permission("map-tnc", "/map-tnc/finance"));
-            permissionRepository.save(new Permission("map-tnc", "/map-tnc/monitoring-evaluation"));
+            permissionRepository.save(new Permission("tautua", "/tautua"));
+            permissionRepository.save(new Permission("tautua", "/tautua/finance"));
+            permissionRepository.save(new Permission("tautua", "/tautua/monitoring-evaluation"));
         };
     }
 }

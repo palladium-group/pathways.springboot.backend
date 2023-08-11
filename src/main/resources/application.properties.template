@@ -13,3 +13,13 @@ allowed.origins=http://localhost:3000
 DEFAULT_USER_USERNAME=admin
 DEFAULT_USER_EMAIL=email
 DEFAULT_USER_PASSWORD=adminpassword
+
+# logging
+logging.level.root=INFO
+# Configure logging to a file
+logging.file.name=logs/pathways.log
+# Define rolling policy and file pattern
+logging.logback.rollingpolicy.max-history=30
+logging.logback.rollingpolicy.max-file-size=10MB
+# Custom logging pattern for console output
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
