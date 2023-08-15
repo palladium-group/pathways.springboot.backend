@@ -34,6 +34,12 @@ public class UserPermissionService {
             throw new UsernameNotFoundException("User not found");
         }
 
+        // Remove all previous user permissions first
+        List<UserPermission> allUserPermissions = userPermissionRepository.findByUser(user);
+        for (UserPermission perm: allUserPermissions) {
+            userPermissionRepository.delete(perm);
+        }
+
         for (String route: permissions) {
             Permission permission = permissionRepository.findByRoute(route);
             if (permission == null) {
