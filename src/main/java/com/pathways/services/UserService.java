@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +34,10 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    public ApplicationUser getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public List<String> getUserPermissions(String username) {
@@ -57,5 +62,27 @@ public class UserService implements UserDetailsService {
         return userPermissions.stream()
                 .map(userPermission -> userPermission.getPermission().getRoute())
                 .collect(Collectors.toList());
+    }
+
+    public void resetPassword(String email, String password) {
+        ApplicationUser user = userRepository.findByEmail(email);
+        String encodedPassword = encoder.encode(password);
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+    }
+
+//    public void initiatePasswordReset(String email) {
+//        Optional<ApplicationUser> user = userRepository.findByEmail(email);
+//        if (user.isPresent()) {
+//            String resetToken = this.generateResetToken();
+//            user.setResetToken(resetToken);
+//            userRepository.save(user);
+//
+//            sendPasswordResetEmail(user.getEmail(), resetToken);
+//        }
+//    }
+
+    public String generateResetToken() {
+        return UUID.randomUUID().toString();
     }
 }
