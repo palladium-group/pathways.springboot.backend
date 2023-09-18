@@ -1,14 +1,19 @@
 package com.pathways.services;
 
 import com.pathways.models.ApplicationUser;
+import com.pathways.models.PasswordResetToken;
 import com.pathways.models.UserPermission;
+import com.pathways.repository.PasswordTokenRepository;
 import com.pathways.repository.UserPermissionRepository;
 import com.pathways.repository.UserRepository;
+import jakarta.mail.MessagingException;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,15 +25,21 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder encoder;
     private UserRepository userRepository;
     private UserPermissionRepository userPermissionRepository;
+    private PasswordTokenRepository passwordTokenRepository;
+    private EmailService emailService;
+    private Environment environment;
 
     public UserService(
             UserRepository userRepository,
             PasswordEncoder encoder,
-            UserPermissionRepository userPermissionRepository
-    ) {
+            UserPermissionRepository userPermissionRepository,
+            PasswordTokenRepository passwordTokenRepository, EmailService emailService, Environment environment) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.userPermissionRepository = userPermissionRepository;
+        this.passwordTokenRepository = passwordTokenRepository;
+        this.emailService = emailService;
+        this.environment = environment;
     }
 
     @Override
@@ -64,23 +75,34 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public void resetPassword(String email, String password) {
-        ApplicationUser user = userRepository.findByEmail(email);
+    public void resetPassword(ApplicationUser user, String password) {
         String encodedPassword = encoder.encode(password);
         user.setPassword(encodedPassword);
         userRepository.save(user);
     }
 
-//    public void initiatePasswordReset(String email) {
-//        Optional<ApplicationUser> user = userRepository.findByEmail(email);
-//        if (user.isPresent()) {
-//            String resetToken = this.generateResetToken();
-//            user.setResetToken(resetToken);
-//            userRepository.save(user);
-//
-//            sendPasswordResetEmail(user.getEmail(), resetToken);
-//        }
-//    }
+    public void initiatePasswordReset(String email) throws MessagingException {
+        Context context = new Context();
+        String host = environment.getProperty("allowed.origins");
+        ApplicationUser user = userRepository.findByEmail(email);
+        if (user != null) {
+            PasswordResetToken token = passwordTokenRepository.findPasswordResetTokenByUser(user);
+            if (token.isTokenExpired()) {
+                String resetToken = this.generateResetToken();
+                PasswordResetToken myToken = new PasswordResetToken(resetToken, user);
+                passwordTokenRepository.save(myToken);
+                context.setVariable("message", resetToken);
+                context.setVariable("host", host);
+                emailService.sendEmailWithHtmlTemplate(user.getEmail(), "Password Reset E-mail", "email-template", context);
+            } else {
+                context.setVariable("message", token.getToken());
+                context.setVariable("host", host);
+                emailService.sendEmailWithHtmlTemplate(user.getEmail(), "Password Reset E-mail", "email-template", context);
+            }
+        } else {
+            throw new UsernameNotFoundException("User not found");
+        }
+    }
 
     public String generateResetToken() {
         return UUID.randomUUID().toString();
