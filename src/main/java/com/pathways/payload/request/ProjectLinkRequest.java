@@ -8,7 +8,6 @@ public class ProjectLinkRequest {
     private String name;
     @NotBlank
     private String url;
-    @NotBlank
     private String color;
     @NotNull
     private Integer projectId;

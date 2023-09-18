@@ -2,6 +2,7 @@ package com.pathways.services;
 
 import com.pathways.models.Project;
 import com.pathways.payload.request.ProjectRequest;
+import com.pathways.payload.request.UpdateProjectRequest;
 import com.pathways.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,5 +29,18 @@ public class ProjectService {
 
     public Optional<Project> getProjectById(Integer id) {
         return projectRepository.findById(id);
+    }
+
+    public void updateProject(UpdateProjectRequest updateProjectRequest) {
+        Optional<Project> optionalProject = projectRepository.findById(updateProjectRequest.getProjectId());
+        if (optionalProject.isPresent()) {
+            Project project = optionalProject.get();
+
+            project.setName(updateProjectRequest.getName());
+            project.setColor(updateProjectRequest.getColor());
+            project.setIcon(updateProjectRequest.getIcon());
+
+            projectRepository.save(project);
+        }
     }
 }

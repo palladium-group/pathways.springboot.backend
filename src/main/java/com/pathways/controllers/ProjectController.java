@@ -3,6 +3,7 @@ package com.pathways.controllers;
 import com.pathways.models.Project;
 import com.pathways.models.ProjectLink;
 import com.pathways.payload.request.ProjectRequest;
+import com.pathways.payload.request.UpdateProjectRequest;
 import com.pathways.services.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,17 @@ public class ProjectController {
             projectService.createNewProject(projectRequest);
             return ResponseEntity.ok("OK");
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateProject(@Valid @RequestBody UpdateProjectRequest updateProjectRequest) {
+        try {
+            projectService.updateProject(updateProjectRequest);
+            return ResponseEntity.ok("OK");
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
