@@ -87,7 +87,7 @@ public class UserService implements UserDetailsService {
         ApplicationUser user = userRepository.findByEmail(email);
         if (user != null) {
             PasswordResetToken token = passwordTokenRepository.findPasswordResetTokenByUser(user);
-            if (token.isTokenExpired()) {
+            if (token == null || token.isTokenExpired()) {
                 String resetToken = this.generateResetToken();
                 PasswordResetToken myToken = new PasswordResetToken(resetToken, user);
                 passwordTokenRepository.save(myToken);

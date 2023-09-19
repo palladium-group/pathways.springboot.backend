@@ -44,12 +44,17 @@ public class ResetPasswordController {
 
     @PostMapping("/request")
     public ResponseEntity<?> resetPasswordRequest(@RequestBody ResetPasswordRequest request) throws MessagingException, UnsupportedEncodingException {
-        var user = this.userService.getUserByEmail(request.getEmail());
-        if (user != null) {
-            this.userService.initiatePasswordReset(request.getEmail());
-            return new ResponseEntity<>("Successful", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Email not found", HttpStatus.BAD_REQUEST);
+        try {
+            var user = this.userService.getUserByEmail(request.getEmail());
+            if (user != null) {
+                this.userService.initiatePasswordReset(request.getEmail());
+                return new ResponseEntity<>("Successful", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Email not found", HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
 }
