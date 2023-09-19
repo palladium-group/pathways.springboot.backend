@@ -32,6 +32,7 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
         helper.setTo(to);
+        helper.setFrom("noreply@dias-is.online");
         helper.setSubject(subject);
         String htmlContent = templateEngine.process(templateName, context);
         helper.setText(htmlContent, true);
