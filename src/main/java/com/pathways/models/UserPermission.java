@@ -14,13 +14,13 @@ public class UserPermission {
     private ApplicationUser user;
 
     @ManyToOne
-    @JoinColumn(name = "permission_id")
-    private Permission permission;
+    @JoinColumn(name = "projectlink_id")
+    private ProjectLink projectLink;
 
-    public UserPermission(ApplicationUser user, Permission permission) {
+    public UserPermission(ApplicationUser user, ProjectLink projectLink) {
         super();
         this.user = user;
-        this.permission = permission;
+        this.projectLink = projectLink;
     }
 
     public UserPermission() {
@@ -43,11 +43,11 @@ public class UserPermission {
         this.user = user;
     }
 
-    public Permission getPermission() {
-        return permission;
+    public ProjectLink getProjectLink() {
+        return projectLink;
     }
 
-    public void setPermission(Permission permission) {
-        this.permission = permission;
+    public void setProjectLink(ProjectLink projectLink) {
+        this.projectLink = projectLink;
     }
 }

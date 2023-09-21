@@ -58,4 +58,8 @@ public class ProjectLinkService {
             projectLinkRepository.save(projectLink);
         }
     }
+
+    public void deleteProjectLinkById(Integer id) {
+        projectLinkRepository.deleteById(id);
+    }
 }
