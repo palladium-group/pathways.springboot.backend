@@ -13,14 +13,12 @@ public class UserPermission {
     @JoinColumn(name = "user_id")
     private ApplicationUser user;
 
-    @ManyToOne
-    @JoinColumn(name = "projectlink_id")
-    private ProjectLink projectLink;
+    private String route;
 
-    public UserPermission(ApplicationUser user, ProjectLink projectLink) {
+    public UserPermission(ApplicationUser user, String route) {
         super();
         this.user = user;
-        this.projectLink = projectLink;
+        this.route = route;
     }
 
     public UserPermission() {
@@ -43,11 +41,11 @@ public class UserPermission {
         this.user = user;
     }
 
-    public ProjectLink getProjectLink() {
-        return projectLink;
+    public String getRoute() {
+        return route;
     }
 
-    public void setProjectLink(ProjectLink projectLink) {
-        this.projectLink = projectLink;
+    public void setRoute(String route) {
+        this.route = route;
     }
 }

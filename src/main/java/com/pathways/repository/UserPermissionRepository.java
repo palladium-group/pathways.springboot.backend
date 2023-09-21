@@ -12,5 +12,5 @@ import java.util.Optional;
 @Repository
 public interface UserPermissionRepository extends JpaRepository<UserPermission, Integer> {
     List<UserPermission> findByUser(Optional<ApplicationUser> user);
-    Optional<UserPermission> findByUserAndPermission(ApplicationUser applicationUser, Permission permission);
+    Optional<UserPermission> findByUserAndRoute(ApplicationUser applicationUser, String route);
 }

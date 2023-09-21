@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
 
         List<UserPermission> userPermissions = userPermissionRepository.findByUser(user);
         return userPermissions.stream()
-                .map(userPermission -> userPermission.getPermission().getRoute())
+                .map(userPermission -> userPermission.getRoute())
                 .collect(Collectors.toList());
     }
 
@@ -71,7 +71,7 @@ public class UserService implements UserDetailsService {
 
         List<UserPermission> userPermissions = userPermissionRepository.findByUser(user);
         return userPermissions.stream()
-                .map(userPermission -> userPermission.getPermission().getRoute())
+                .map(userPermission -> userPermission.getRoute())
                 .collect(Collectors.toList());
     }
 

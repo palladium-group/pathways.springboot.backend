@@ -41,18 +41,14 @@ public class UserPermissionService {
         }
 
         for (String route: permissions) {
-            Permission permission = permissionRepository.findByRoute(route);
-            if (permission == null) {
-                throw new IllegalArgumentException("Permission not found");
-            }
             // Check if the UserPermission already exists for the given user and permission
-            Optional<UserPermission> existingUserPermission = userPermissionRepository.findByUserAndPermission(user.get(), permission);
+            Optional<UserPermission> existingUserPermission = userPermissionRepository.findByUserAndRoute(user.get(), route);
 
             if (!existingUserPermission.isPresent()) {
                 // Save the UserPermission only if it doesn't exist already
                 UserPermission userPermission = new UserPermission();
                 userPermission.setUser(user.get());
-                userPermission.setPermission(permission);
+                userPermission.setRoute(route);
                 userPermissionRepository.save(userPermission);
             }
         }
