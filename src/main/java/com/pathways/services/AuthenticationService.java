@@ -6,6 +6,7 @@ import com.pathways.payload.response.LoginResponseDTO;
 import com.pathways.payload.request.RegisterRequest;
 import com.pathways.repository.RoleRepository;
 import com.pathways.repository.UserRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,23 +28,44 @@ public class AuthenticationService {
     private PasswordEncoder encoder;
     private AuthenticationManager authenticationManager;
     private TokenService tokenService;
+    private UserService userService;
 
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, AuthenticationManager authenticationManager, TokenService tokenService) {
+    public AuthenticationService(
+            UserRepository userRepository,
+            RoleRepository roleRepository,
+            PasswordEncoder encoder,
+            AuthenticationManager authenticationManager,
+            TokenService tokenService,
+            UserService userService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.encoder = encoder;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
+        this.userService = userService;
     }
 
-    public ApplicationUser registerUser(RegisterRequest registerRequest) {
+    public ApplicationUser registerUser(RegisterRequest registerRequest) throws MessagingException {
         String encodedPassword = encoder.encode(registerRequest.getPassword());
         Role userRole = roleRepository.findByAuthority("USER").get();
 
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
 
-        return userRepository.save(new ApplicationUser(0, registerRequest.getUsername(), registerRequest.getEmail(), encodedPassword, registerRequest.getFirstName(), registerRequest.getLastName(), authorities));
+        ApplicationUser user = userRepository.save(
+                new ApplicationUser(
+                        0,
+                        registerRequest.getUsername(),
+                        registerRequest.getEmail(),
+                        encodedPassword,
+                        registerRequest.getFirstName(),
+                        registerRequest.getLastName(),
+                        authorities
+                )
+        );
+
+        userService.initiateConfirmUserAccount(user);
+        return user;
     }
 
     public void updateUserRegistration(Integer userId, String firstName, String lastName) {

@@ -104,6 +104,23 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public void initiateConfirmUserAccount(ApplicationUser user) throws MessagingException {
+        Context context = new Context();
+        PasswordResetToken token = passwordTokenRepository.findPasswordResetTokenByUser(user);
+        if (token == null || token.isTokenExpired()) {
+            String resetToken = this.generateResetToken();
+            PasswordResetToken myToken = new PasswordResetToken(resetToken, user);
+            passwordTokenRepository.save(myToken);
+            context.setVariable("message", resetToken);
+            context.setVariable("name", user.getFirstName());
+            emailService.sendEmailWithHtmlTemplate(user.getEmail(), "Verify Account E-mail", "register-account-template", context);
+        } else {
+            context.setVariable("message", token.getToken());
+            context.setVariable("name", user.getFirstName());
+            emailService.sendEmailWithHtmlTemplate(user.getEmail(), "Verify Account E-mail", "register-account-template", context);
+        }
+    }
+
     public String generateResetToken() {
         return UUID.randomUUID().toString();
     }

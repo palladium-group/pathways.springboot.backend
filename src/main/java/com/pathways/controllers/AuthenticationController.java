@@ -6,6 +6,7 @@ import com.pathways.payload.request.UpdateRegisterUserRequest;
 import com.pathways.payload.response.LoginResponseDTO;
 import com.pathways.payload.request.RegisterRequest;
 import com.pathways.services.AuthenticationService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ApplicationUser registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ApplicationUser registerUser(@Valid @RequestBody RegisterRequest registerRequest) throws MessagingException {
         return authenticationService.registerUser(registerRequest);
     }
 
