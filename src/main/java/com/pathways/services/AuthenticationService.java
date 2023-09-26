@@ -10,11 +10,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -42,6 +44,19 @@ public class AuthenticationService {
         authorities.add(userRole);
 
         return userRepository.save(new ApplicationUser(0, registerRequest.getUsername(), registerRequest.getEmail(), encodedPassword, registerRequest.getFirstName(), registerRequest.getLastName(), authorities));
+    }
+
+    public void updateUserRegistration(Integer userId, String firstName, String lastName) {
+        Optional<ApplicationUser> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            ApplicationUser applicationUser = optionalUser.get();
+            applicationUser.setFirstName(firstName);
+            applicationUser.setLastName(lastName);
+
+            userRepository.save(applicationUser);
+        } else {
+            throw new UsernameNotFoundException("User Not Found");
+        }
     }
 
     public LoginResponseDTO loginUser(String username, String password) {
