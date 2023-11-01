@@ -72,7 +72,6 @@ public class SecurityConfiguration {
                 .permitAll()
                 .anyRequest()
                 .authenticated();
-        http.oauth2Login();
         return http.build();
     }
 
