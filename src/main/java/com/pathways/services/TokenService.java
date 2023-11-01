@@ -14,26 +14,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
-    private JwtEncoder jwtEncoder;
-    private JwtDecoder jwtDecoder;
+//    private JwtEncoder jwtEncoder;
+//    private JwtDecoder jwtDecoder;
 
-    public TokenService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
-        this.jwtEncoder = jwtEncoder;
-        this.jwtDecoder = jwtDecoder;
-    }
+//    public TokenService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
+//        this.jwtEncoder = jwtEncoder;
+//        this.jwtDecoder = jwtDecoder;
+//    }
 
-    public String generateJwt(Authentication auth) {
-        Instant now = Instant.now();
-        String scope = auth.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
-                .subject(auth.getName())
-                .claim("scope", scope)
-                .build();
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-    }
+//    public String generateJwt(Authentication auth) {
+//        Instant now = Instant.now();
+//        String scope = auth.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(" "));
+//        JwtClaimsSet claims = JwtClaimsSet.builder()
+//                .issuer("self")
+//                .issuedAt(now)
+//                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+//                .subject(auth.getName())
+//                .claim("scope", scope)
+//                .build();
+//        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+//    }
 }

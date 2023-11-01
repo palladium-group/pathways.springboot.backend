@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
-    private PasswordEncoder encoder;
+//    private PasswordEncoder encoder;
     private UserRepository userRepository;
     private UserPermissionRepository userPermissionRepository;
     private PasswordTokenRepository passwordTokenRepository;
@@ -31,11 +31,11 @@ public class UserService implements UserDetailsService {
 
     public UserService(
             UserRepository userRepository,
-            PasswordEncoder encoder,
+//            PasswordEncoder encoder,
             UserPermissionRepository userPermissionRepository,
             PasswordTokenRepository passwordTokenRepository, EmailService emailService, Environment environment) {
         this.userRepository = userRepository;
-        this.encoder = encoder;
+//        this.encoder = encoder;
         this.userPermissionRepository = userPermissionRepository;
         this.passwordTokenRepository = passwordTokenRepository;
         this.emailService = emailService;
@@ -75,11 +75,11 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
-    public void resetPassword(ApplicationUser user, String password) {
-        String encodedPassword = encoder.encode(password);
-        user.setPassword(encodedPassword);
-        userRepository.save(user);
-    }
+//    public void resetPassword(ApplicationUser user, String password) {
+//        String encodedPassword = encoder.encode(password);
+//        user.setPassword(encodedPassword);
+//        userRepository.save(user);
+//    }
 
     public void initiatePasswordReset(String email) throws MessagingException {
         Context context = new Context();

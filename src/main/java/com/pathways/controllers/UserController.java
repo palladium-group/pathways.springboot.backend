@@ -7,11 +7,14 @@ import com.pathways.services.UserService;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +52,15 @@ public class UserController {
 
     @GetMapping("/user-permissions")
     public List<String> getUserPermissions() {
+        final var user = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUserName = authentication.getName();
             return userService.getUserPermissions(currentUserName);
         } else {
-            return null;
+            return Collections.<String>emptyList();
         }
     }
 }

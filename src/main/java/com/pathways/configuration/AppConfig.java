@@ -24,21 +24,21 @@ public class AppConfig {
     }
 
 
-    @Bean
-    CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        return args -> {
-            if (roleRepository.findByAuthority("ADMIN").isPresent()) return;
-            Role adminRole = roleRepository.save(new Role("ADMIN"));
-            roleRepository.save(new Role("USER"));
-
-            Set<Role> roles = new HashSet<>();
-            roles.add(adminRole);
-
-            ApplicationUser admin = new ApplicationUser(1, environment.getProperty("DEFAULT_USER_USERNAME"), environment.getProperty("DEFAULT_USER_EMAIL"), passwordEncoder.encode(environment.getProperty("DEFAULT_USER_PASSWORD")), "Admin", "Admin", roles);
-
-            userRepository.save(admin);
-        };
-    }
+//    @Bean
+//    CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+//        return args -> {
+//            if (roleRepository.findByAuthority("ADMIN").isPresent()) return;
+//            Role adminRole = roleRepository.save(new Role("ADMIN"));
+//            roleRepository.save(new Role("USER"));
+//
+//            Set<Role> roles = new HashSet<>();
+//            roles.add(adminRole);
+//
+//            ApplicationUser admin = new ApplicationUser(1, environment.getProperty("DEFAULT_USER_USERNAME"), environment.getProperty("DEFAULT_USER_EMAIL"), passwordEncoder.encode(environment.getProperty("DEFAULT_USER_PASSWORD")), "Admin", "Admin", roles);
+//
+//            userRepository.save(admin);
+//        };
+//    }
 
     @Bean
     CommandLineRunner initializePermissions(PermissionRepository permissionRepository) {

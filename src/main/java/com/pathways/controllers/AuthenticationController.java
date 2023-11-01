@@ -22,27 +22,27 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/register")
-    public ApplicationUser registerUser(@Valid @RequestBody RegisterRequest registerRequest) throws MessagingException {
-        return authenticationService.registerUser(registerRequest);
-    }
+//    @PostMapping("/register")
+//    public ApplicationUser registerUser(@Valid @RequestBody RegisterRequest registerRequest) throws MessagingException {
+//        return authenticationService.registerUser(registerRequest);
+//    }
 
-    @PostMapping("/update-user")
-    public ResponseEntity<?> updateUserRegistration(@Valid @RequestBody UpdateRegisterUserRequest updateRegisterUserRequest) {
-        try {
-            authenticationService.updateUserRegistration(updateRegisterUserRequest.getUserId(), updateRegisterUserRequest.getFirstName(), updateRegisterUserRequest.getLastName());
-            return ResponseEntity.ok("OK");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
-        }
-    }
+//    @PostMapping("/update-user")
+//    public ResponseEntity<?> updateUserRegistration(@Valid @RequestBody UpdateRegisterUserRequest updateRegisterUserRequest) {
+//        try {
+//            authenticationService.updateUserRegistration(updateRegisterUserRequest.getUserId(), updateRegisterUserRequest.getFirstName(), updateRegisterUserRequest.getLastName());
+//            return ResponseEntity.ok("OK");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+//        }
+//    }
 
-    @PostMapping("/login")
-    public LoginResponseDTO loginUser(@RequestBody LoginRequest loginRequest) {
-        var user = authenticationService.loginUser(loginRequest.username(), loginRequest.password());
-        if (user.getUser() == null) {
-            throw new AccessDeniedException("Unauthorized to access this resource");
-        }
-        return user;
-    }
+//    @PostMapping("/login")
+//    public LoginResponseDTO loginUser(@RequestBody LoginRequest loginRequest) {
+//        var user = authenticationService.loginUser(loginRequest.username(), loginRequest.password());
+//        if (user.getUser() == null) {
+//            throw new AccessDeniedException("Unauthorized to access this resource");
+//        }
+//        return user;
+//    }
 }

@@ -26,21 +26,21 @@ public class ResetPasswordController {
         this.passwordResetTokenService = passwordResetTokenService;
     }
 
-    @PostMapping("/new-password")
-    public ResponseEntity<String> newPasswordRequest(@RequestBody NewPasswordRequest request) {
-        try {
-            ApplicationUser user = passwordResetTokenService.getUserByValidToken(request.getResetToken());
-            if (user != null) {
-                this.userService.resetPassword(user, request.getNewPassword());
-                return new ResponseEntity<>("Successful", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Email not found", HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
-        }
-    }
+//    @PostMapping("/new-password")
+//    public ResponseEntity<String> newPasswordRequest(@RequestBody NewPasswordRequest request) {
+//        try {
+//            ApplicationUser user = passwordResetTokenService.getUserByValidToken(request.getResetToken());
+//            if (user != null) {
+//                this.userService.resetPassword(user, request.getNewPassword());
+//                return new ResponseEntity<>("Successful", HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>("Email not found", HttpStatus.BAD_REQUEST);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+//        }
+//    }
 
     @PostMapping("/request")
     public ResponseEntity<?> resetPasswordRequest(@RequestBody ResetPasswordRequest request) throws MessagingException, UnsupportedEncodingException {
