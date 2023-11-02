@@ -3,19 +3,12 @@ package com.pathways.payload.request;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
+import java.util.UUID;
 
 public class UserPermissionsRequest {
-    private Integer userId;
+    private UUID userId;
 
     private List<String> assignedRoutes;
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     public List<String> getAssignedRoutes() {
         return assignedRoutes;
@@ -23,5 +16,13 @@ public class UserPermissionsRequest {
 
     public void setAssignedRoutes(List<String> assignedRoutes) {
         this.assignedRoutes = assignedRoutes;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 }

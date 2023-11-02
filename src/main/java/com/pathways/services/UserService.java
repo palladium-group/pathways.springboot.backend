@@ -51,25 +51,8 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public List<String> getUserPermissions(String username) {
-        Optional<ApplicationUser> user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        List<UserPermission> userPermissions = userPermissionRepository.findByUser(user);
-        return userPermissions.stream()
-                .map(userPermission -> userPermission.getRoute())
-                .collect(Collectors.toList());
-    }
-
-    public List<String> getUserPermissions(Integer userId) {
-        Optional<ApplicationUser> user = userRepository.findById(userId);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        List<UserPermission> userPermissions = userPermissionRepository.findByUser(user);
+    public List<String> getUserPermissions(UUID userId) {
+        List<UserPermission> userPermissions = userPermissionRepository.findByKeyCloakUserId(userId);
         return userPermissions.stream()
                 .map(userPermission -> userPermission.getRoute())
                 .collect(Collectors.toList());

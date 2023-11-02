@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserPermissionService {
@@ -28,26 +29,21 @@ public class UserPermissionService {
         this.userPermissionRepository = userPermissionRepository;
     }
 
-    public void assignPermissionToUser(Integer userId, List<String> permissions) {
-        Optional<ApplicationUser> user = userRepository.findById(userId);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
+    public void assignPermissionToUser(UUID userId, List<String> permissions) {
         // Remove all previous user permissions first
-        List<UserPermission> allUserPermissions = userPermissionRepository.findByUser(user);
+        List<UserPermission> allUserPermissions = userPermissionRepository.findByKeyCloakUserId(userId);
         for (UserPermission perm: allUserPermissions) {
             userPermissionRepository.delete(perm);
         }
 
         for (String route: permissions) {
             // Check if the UserPermission already exists for the given user and permission
-            Optional<UserPermission> existingUserPermission = userPermissionRepository.findByUserAndRoute(user.get(), route);
+            Optional<UserPermission> existingUserPermission = userPermissionRepository.findByKeyCloakUserIdAndRoute(userId, route);
 
             if (!existingUserPermission.isPresent()) {
                 // Save the UserPermission only if it doesn't exist already
                 UserPermission userPermission = new UserPermission();
-                userPermission.setUser(user.get());
+                userPermission.setKeyCloakUserId(userId);
                 userPermission.setRoute(route);
                 userPermissionRepository.save(userPermission);
             }

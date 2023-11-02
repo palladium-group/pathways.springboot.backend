@@ -1,36 +1,20 @@
 package com.pathways.configuration;
 
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
 import com.pathways.utils.RSAKeyProperties;
+import org.keycloak.OAuth2Constants;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -46,20 +30,6 @@ public class SecurityConfiguration {
     public SecurityConfiguration(RSAKeyProperties keys, Environment environment) {
         this.environment = environment;
     }
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity
-//                .csrf(csrf -> csrf.disable())
-//                .cors(Customizer.withDefaults())
-//                .authorizeHttpRequests()
-//                .requestMatchers("/**").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .oauth2Login();
-//
-//        return  httpSecurity.build();
-//    }
 
     @Order(1)
     @Bean
@@ -77,6 +47,18 @@ public class SecurityConfiguration {
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .build();
+    }
+
+    @Bean
+    Keycloak keycloak() {
+        return KeycloakBuilder.builder()
+                .serverUrl(environment.getProperty("keycloak_server"))
+                .realm(environment.getProperty("keycloak_realm"))
+                .clientId(environment.getProperty("keycloak_clientid"))
+                .grantType(OAuth2Constants.PASSWORD)
+                .username(environment.getProperty("keycloak_username"))
+                .password(environment.getProperty("keycloak_password"))
                 .build();
     }
 

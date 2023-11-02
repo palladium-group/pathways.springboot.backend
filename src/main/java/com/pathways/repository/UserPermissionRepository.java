@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface UserPermissionRepository extends JpaRepository<UserPermission, Integer> {
-    List<UserPermission> findByUser(Optional<ApplicationUser> user);
-    Optional<UserPermission> findByUserAndRoute(ApplicationUser applicationUser, String route);
+    List<UserPermission> findByKeyCloakUserId(UUID userId);
+    Optional<UserPermission> findByKeyCloakUserIdAndRoute(UUID userId, String route);
 }

@@ -2,6 +2,8 @@ package com.pathways.models;
 
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "user_permissions")
 public class UserPermission {
@@ -9,15 +11,13 @@ public class UserPermission {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private ApplicationUser user;
+    private UUID keyCloakUserId;
 
     private String route;
 
-    public UserPermission(ApplicationUser user, String route) {
+    public UserPermission(UUID keyCloakUserId, String route) {
         super();
-        this.user = user;
+        this.keyCloakUserId = keyCloakUserId;
         this.route = route;
     }
 
@@ -33,19 +33,19 @@ public class UserPermission {
         return id;
     }
 
-    public ApplicationUser getUser() {
-        return user;
-    }
-
-    public void setUser(ApplicationUser user) {
-        this.user = user;
-    }
-
     public String getRoute() {
         return route;
     }
 
     public void setRoute(String route) {
         this.route = route;
+    }
+
+    public UUID getKeyCloakUserId() {
+        return keyCloakUserId;
+    }
+
+    public void setKeyCloakUserId(UUID keyCloakUserId) {
+        this.keyCloakUserId = keyCloakUserId;
     }
 }

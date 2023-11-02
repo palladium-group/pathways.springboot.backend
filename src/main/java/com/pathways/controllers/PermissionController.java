@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/permission")
@@ -30,7 +31,7 @@ public class PermissionController {
         return permissionService.getAllPermission();
     }
     @GetMapping("/getUserPermissionsById/{userId}")
-    public List<String> getUserPermissionsById(@PathVariable Integer userId) {
+    public List<String> getUserPermissionsById(@PathVariable UUID userId) {
         return userService.getUserPermissions(userId);
     }
     @PostMapping("/assign-user-permissions")
