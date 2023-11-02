@@ -46,12 +46,10 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests()
-                .requestMatchers(new AntPathRequestMatcher("/"))
-                .permitAll()
-                .anyRequest()
-                .authenticated();
-        http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/**").fullyAuthenticated();
+                })
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         return http.build();
     }
 
