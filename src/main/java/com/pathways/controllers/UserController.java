@@ -64,11 +64,10 @@ public class UserController {
         return userRepository.findById(userId);
     }
 
-    @GetMapping("/user-permissions")
-    public List<String> getUserPermissions(@AuthenticationPrincipal Jwt jwt) {
-        var name  = jwt.getClaim("sub");
-        if (name != null) {
-            var userId = UUID.fromString(name.toString());
+    @GetMapping("/user-permissions/{sub}")
+    public List<String> getUserPermissions(@PathVariable String sub) {
+        if (sub != null) {
+            var userId = UUID.fromString(sub);
             return userService.getUserPermissions(userId);
         } else {
             return Collections.<String>emptyList();
