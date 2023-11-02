@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/**").permitAll();
-                    auth.anyRequest().permitAll();
+                    auth.anyRequest().fullyAuthenticated();
                 })
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         return http.build();
