@@ -85,7 +85,21 @@ public class KeyCloakAdminClient {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization", "Bearer " + token);
 
-            String requestBody = "{\"firstName\": \"" + firstName + "\",\"lastName\": \"" + lastName + "\", \"email\": \"" + email + "\", \"username\": \"" + email + "\", \"enabled\": " + isEnabled + "}";
+            // Create credentials JSON array
+            String credentialsJson = "[{\"type\":\"password\",\"value\":\"passwordabc\",\"temporary\":true}]";
+
+            // Create requiredActions JSON array
+            String requiredActionsJson = "[\"UPDATE_PASSWORD\"]";
+
+            String requestBody = "{" +
+                    "\"firstName\": \"" + firstName + "\"," +
+                    "\"lastName\": \"" + lastName + "\", " +
+                    "\"email\": \"" + email + "\", " +
+                    "\"username\": \"" + email + "\"," +
+                    " \"enabled\": " + isEnabled + ","
+                    + "\"credentials\":" + credentialsJson + ","
+                    + "\"requiredActions\":" + requiredActionsJson
+                    + "}";
 
             HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
 
