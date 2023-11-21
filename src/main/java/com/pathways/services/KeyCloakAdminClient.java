@@ -86,7 +86,7 @@ public class KeyCloakAdminClient {
             headers.set("Authorization", "Bearer " + token);
 
             // Create credentials JSON array
-            String credentialsJson = "[{\"type\":\"password\",\"value\":\"passwordabc\",\"temporary\":true}]";
+            String credentialsJson = "[{\"type\":\"password\",\"value\":\"P@ss$G#tew@y\",\"temporary\":true}]";
 
             // Create requiredActions JSON array
             String requiredActionsJson = "[\"UPDATE_PASSWORD\"]";
