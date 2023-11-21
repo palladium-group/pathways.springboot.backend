@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.env.Environment;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -14,12 +15,8 @@ import java.util.List;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 
 @Service
 public class KeyCloakAdminClient {
@@ -75,6 +72,48 @@ public class KeyCloakAdminClient {
             // Handle JSON parsing exception
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public boolean CreateUser(String firstName, String lastName, String email, boolean isEnabled)
+    {
+        try {
+            String token = getToken();
+            String dataUrl = "https://nextgen-pct-kc.eastus.cloudapp.azure.com/auth/admin/realms/pathways/users";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", "Bearer " + token);
+
+            String requestBody = "{\"firstName\": \"" + firstName + "\",\"lastName\": \"" + lastName + "\", \"email\": \"" + email + "\", \"username\": \"" + email + "\", \"enabled\": " + isEnabled + "}";
+
+            HttpEntity<String> request = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(dataUrl, HttpMethod.POST, request, String.class);
+
+            // Get the response body and other information
+            String responseBody = response.getBody();
+            HttpStatus statusCode = (HttpStatus) response.getStatusCode();
+
+            // You can handle the response as needed
+            System.out.println("Response Code: " + statusCode);
+            System.out.println("Response Body: " + responseBody);
+
+            // Return true if the request was successful (2xx status code)
+            return statusCode.is2xxSuccessful();
+        } catch (HttpClientErrorException e) {
+            // Catch HttpClientErrorException for non-2xx status codes
+            System.err.println("Error Response Code: " + e.getRawStatusCode());
+            System.err.println("Error Response Body: " + e.getResponseBodyAsString());
+
+            // Return false for unsuccessful requests
+            return false;
+        } catch (Exception e) {
+            // Catch other exceptions
+            e.printStackTrace();
+
+            // Return false for other exceptions
+            return false;
         }
     }
 }

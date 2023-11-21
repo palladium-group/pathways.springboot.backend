@@ -1,10 +1,13 @@
 package com.pathways.controllers;
 
 import com.pathways.models.ApplicationUser;
+import com.pathways.payload.request.RegisterRequest;
 import com.pathways.payload.response.LoggedInUserResponseDTO;
 import com.pathways.repository.UserRepository;
 import com.pathways.services.KeyCloakAdminClient;
 import com.pathways.services.UserService;
+import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,10 +21,7 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.*;
@@ -61,6 +61,11 @@ public class UserController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
+    }
+
+    @PostMapping("/register")
+    public boolean registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        return keyCloakAdminClient.CreateUser(registerRequest.getFirstName(), registerRequest.getLastName(), registerRequest.getEmail(), true);
     }
 
     @GetMapping("/get/{userId}")
